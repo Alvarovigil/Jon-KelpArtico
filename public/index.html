@@ -7,8 +7,18 @@
 <meta name="description" content="A scroll story about Arctic kelp forests and the sea urchins that graze them. By 2090, warming could double urchin grazing rates. Research by Jón Tomas Magnússon Amorós, UWA.">
 <meta name="author" content="Jón Tomas Magnússon Amorós">
 <link rel="canonical" href="https://spiky-situation.vercel.app/">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" id="fav" href="/fav/u0.png" sizes="64x64" type="image/png">
+<script>
+  /* Favicon: the urchin turns in 4 frames (0°, 90°, 180°, 270°). Static for reduced motion. */
+  (() => {
+    const l = document.getElementById('fav');
+    if (!l || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const fr = [0, 1, 2, 3].map(i => `/fav/u${i}.png`);
+    fr.forEach(u => { new Image().src = u; });
+    let i = 0;
+    setInterval(() => { i = (i + 1) % 4; l.href = fr[i]; }, 320);
+  })();
+</script>
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="A spiky situation">

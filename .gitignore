@@ -2,3 +2,8 @@
 .DS_Store
 dist/
 __pycache__/
+
+# copies left by the app when the session moved here
+/kelp-journey.html
+/spiky-situation.html
+/spiky-situation/
