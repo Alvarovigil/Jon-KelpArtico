@@ -29,3 +29,5 @@ Live: https://spiky-situation.vercel.app
 - Kelp forest — © Alexis Savard Drouin
 - Urchin barren — © Thomas Wernberg
 - Sugar kelp (*Saccharina latissima*) — illustration from the poster (no credit shown)
+
+The QR on the poster points to https://spiky-situation.vercel.app — keep that domain.
