@@ -54,7 +54,7 @@
   button { font: inherit; color: inherit; }
   :focus-visible { outline: 1.5px solid var(--ink); outline-offset: 3px; }
 
-  #stain { position: fixed; z-index: 0; left: 50%; top: -30vh; width: 78vw; aspect-ratio: 619 / 2482; margin-left: -22vw; background: var(--stain); opacity: .6; pointer-events: none; will-change: transform; -webkit-mask: url(data:image/webp;base64,/*KELP*/) center / contain no-repeat; mask: url(data:image/webp;base64,/*KELP*/) center / contain no-repeat; transform: rotate(-20deg); }
+  #stain { position: fixed; z-index: 0; left: 50%; top: -30vh; width: 140vw; aspect-ratio: 1835 / 4096; margin-left: -53vw; background: var(--stain); opacity: .6; pointer-events: none; will-change: transform; -webkit-mask: url(data:image/webp;base64,/*KELP*/) center / contain no-repeat; mask: url(data:image/webp;base64,/*KELP*/) center / contain no-repeat; }
   #field { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; touch-action: pan-y; }
   .veil { position: fixed; z-index: 2; left: 0; right: 0; bottom: 0; height: 53vh; pointer-events: none; background: linear-gradient(to top, rgba(239,237,230,.82) 0, rgba(239,237,230,.72) 55%, rgba(239,237,230,0) 100%); }
   #track { position: relative; z-index: 0; pointer-events: none; }
@@ -149,7 +149,7 @@
   @media (min-width: 900px) {
     :root { --pad: clamp(40px, 5vw, 76px); }
     .veil { right: auto; top: 0; height: auto; width: 54vw; background: linear-gradient(to right, rgba(239,237,230,.8) 0, rgba(239,237,230,.68) 55%, rgba(239,237,230,0) 100%); }
-    #stain { width: 34vw; left: 62%; margin-left: 0; top: -55vh; }
+    #stain { width: 61vw; left: 62%; margin-left: -13.5vw; top: -55vh; }
     .bar { padding-top: 28px; font-size: 11px; }
     .panel { right: auto; bottom: auto; top: 50%; width: min(31rem, 38vw); padding: 0 0 0 var(--pad); box-sizing: content-box; transform: translateY(-50%); }
     .eyebrow { font-size: 11px; margin-bottom: 20px; }
@@ -744,7 +744,7 @@
     });
     [P1, P2, P3].forEach((a, i) => { const el = plates[i]; el.style.opacity = a.toFixed(3); el.style.transform = `translate3d(${G.cx.toFixed(1)}px,${(G.cy + (RM ? 0 : (g - [1.1, 2.86, 4.12][i]) * -70)).toFixed(1)}px,0) translate(-50%,-50%) scale(${(RM ? 1 : 1.05 - .05 * a).toFixed(4)})`; });
     closing.style.opacity = CL.toFixed(3); closing.style.transform = `translate3d(${G.cx.toFixed(1)}px,${(G.cy + (RM ? 0 : (1 - CL) * 22)).toFixed(1)}px,0)`;
-    if (!RM) stain.style.transform = `translate3d(0,${(-sy * .018).toFixed(1)}px,0) rotate(${(-20 + g * .35).toFixed(2)}deg)`;
+    if (!RM) stain.style.transform = `translate3d(0,${(-sy * .018).toFixed(1)}px,0) rotate(${(g * .35).toFixed(2)}deg)`;
     stain.style.opacity = kf(g, [[.3, .6], [1, .24]]).toFixed(3);
     mk.style.left = (g / CH * 100).toFixed(2) + '%';
     if (shown.chn !== ch) { shown.chn = ch; nums.forEach((n, i) => n.classList.toggle('on', i === ch)); }
