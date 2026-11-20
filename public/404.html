@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Grazed away · A spiky situation</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#EFEDE6">
+<link rel="icon" href="/fav/u0.png" sizes="64x64" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Host+Grotesk:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root { --paper: #EFEDE6; --ink: #2C1600; --muted: #6E6253; --accent: #D8401F;
+          --serif: "Instrument Serif", Georgia, serif; --sans: "Host Grotesk", system-ui, sans-serif; --mono: "Geist Mono", ui-monospace, monospace; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--paper); color: var(--ink); color-scheme: light; }
+  body { font-family: var(--sans); -webkit-font-smoothing: antialiased; overflow: hidden; }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; }
+  main { position: relative; z-index: 1; min-height: 100%; display: grid; place-items: center; text-align: center;
+         padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+  .wrap { display: flex; flex-direction: column; align-items: center; }
+  .code { position: relative; display: grid; place-items: center; width: min(62vmin, 420px); aspect-ratio: 1; }
+  .code b { font: 400 clamp(120px, 38vmin, 300px)/.8 var(--serif); letter-spacing: -.04em; position: relative; z-index: 1; }
+  .code b i { font-style: normal; display: inline-block; width: .52em; }
+  .code img { position: absolute; width: 34%; height: auto; aspect-ratio: 1; left: 50%; top: 50%; translate: -50% -50%; z-index: 2; animation: spin 40s linear infinite; filter: saturate(.85); }
+  .tag { font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin: 6px 0 14px; opacity: 0; animation: up .9s .5s cubic-bezier(.2,.7,.2,1) forwards; }
+  h1 { font: 400 clamp(30px, 6vmin, 46px)/1.04 var(--serif); margin: 0; opacity: 0; animation: up .9s .65s cubic-bezier(.2,.7,.2,1) forwards; }
+  h1 em { font-style: italic; }
+  a { margin-top: 28px; font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink); text-decoration: none;
+      padding: 13px 18px; border: 1px solid rgba(44,22,0,.45); border-radius: 999px; transition: background .25s, color .25s, border-color .25s;
+      opacity: 0; animation: up .9s .8s cubic-bezier(.2,.7,.2,1) forwards; }
+  a:hover, a:focus-visible { background: var(--ink); color: var(--paper); border-color: var(--ink); outline: none; }
+  .corner { position: fixed; z-index: 1; top: max(20px, env(safe-area-inset-top)); left: max(20px, env(safe-area-inset-left)); font: 500 11px/1.5 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+  .corner span { display: block; color: var(--muted); letter-spacing: .08em; }
+  @keyframes spin { to { rotate: 360deg; } }
+  @keyframes up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .code img { animation: none; } .tag, h1, a { animation-duration: .01s; } }
+</style>
+</head>
+<body>
+<canvas id="c" aria-hidden="true"></canvas>
+<div class="corner">A spiky situation<span>Error 404</span></div>
+<main>
+  <div class="wrap">
+    <div class="code" aria-label="404"><b>4<i></i>4</b><img src="/img/urchin.webp" alt="" width="820" height="820"></div>
+    <p class="tag">Urchin barren</p>
+    <h1>This page has been <em>grazed away</em>.</h1>
+    <a href="/">Back to the kelp forest</a>
+  </div>
+</main>
+<script>
+(() => {
+  // contour lines of a seabed with a bare hollow where the urchin sits (marching squares)
+  const cvs = document.getElementById('c'), ctx = cvs.getContext('2d');
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W, H, cell, cols, rows, v, dpr, C = { x: 0, y: 0, r: 100 };
+  const img = document.querySelector('.code img');
+  function size() {
+    W = innerWidth; H = innerHeight; dpr = Math.min(devicePixelRatio || 1, 2);
+    cvs.width = W * dpr; cvs.height = H * dpr; cell = W < 700 ? 6 : 8;
+    const b = img.getBoundingClientRect(); C = { x: b.left + b.width / 2, y: b.top + b.height / 2, r: Math.max(60, img.offsetWidth * 1.15) };
+    cols = Math.ceil(W / cell) + 1; rows = Math.ceil(H / cell) + 1; v = new Float32Array(cols * rows);
+  }
+  function field(t) {
+    const cx = C.x, cy = C.y, R = C.r, s = 1 / Math.max(W, H);
+    for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
+      const x = i * cell, y = j * cell, nx = x * s * 6, ny = y * s * 6, dx = (x - cx) / R, dy = (y - cy) / R, d2 = dx * dx + dy * dy;
+      v[j * cols + i] = .14 * Math.sin(1.7 * nx + .6 * ny + t * .05) + .1 * Math.sin(-1.2 * nx + 2.3 * ny + 2 - t * .04)
+                      + .06 * Math.sin(3.1 * nx + 2.7 * ny + t * .03) - .9 * Math.exp(-d2 * .55) * (1 + .03 * Math.sin(t * .4));
+    }
+  }
+  function draw(t) {
+    field(t);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); ctx.lineJoin = 'round';
+    for (let k = -14; k <= 8; k++) {
+      const lv = k * .06, p = new Path2D();
+      for (let j = 0; j < rows - 1; j++) for (let i = 0; i < cols - 1; i++) {
+        const a = v[j * cols + i], b = v[j * cols + i + 1], c = v[(j + 1) * cols + i + 1], d = v[(j + 1) * cols + i];
+        const idx = (a > lv) | (b > lv) << 1 | (c > lv) << 2 | (d > lv) << 3; if (idx === 0 || idx === 15) continue;
+        const x = i * cell, y = j * cell, f = (p0, p1) => (lv - p0) / (p1 - p0);
+        const T = [x + cell * f(a, b), y], Rr = [x + cell, y + cell * f(b, c)], B = [x + cell * f(d, c), y + cell], L = [x, y + cell * f(a, d)];
+        const seg = (u, w) => { p.moveTo(u[0], u[1]); p.lineTo(w[0], w[1]); };
+        switch (idx) { case 1: case 14: seg(L, T); break; case 2: case 13: seg(T, Rr); break; case 3: case 12: seg(L, Rr); break; case 4: case 11: seg(Rr, B); break;
+          case 5: seg(L, T); seg(Rr, B); break; case 6: case 9: seg(T, B); break; case 7: case 8: seg(L, B); break; case 10: seg(T, Rr); seg(L, B); break; }
+      }
+      const inner = k <= -9;
+      ctx.strokeStyle = inner ? `rgba(216,64,31,${k % 2 ? .22 : .5})` : `rgba(44,22,0,${k % 4 === 0 ? .26 : .11})`;
+      ctx.lineWidth = inner && k === -9 ? 1.2 : 1; ctx.stroke(p);
+    }
+  }
+  size(); addEventListener('resize', () => { size(); if (RM) draw(0); });
+  if (document.fonts) document.fonts.ready.then(() => { size(); if (RM) draw(0); });
+  if (RM) draw(0); else { const loop = ms => { draw(ms / 1000); requestAnimationFrame(loop); }; requestAnimationFrame(loop); }
+})();
+</script>
+</body>
+</html>
