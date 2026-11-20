@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EFEDE6">
+<meta name="description" content="A scroll story about Arctic kelp forests and the sea urchins that graze them. By 2090, warming could double urchin grazing rates. Research by Jón Tomas Magnússon Amorós, UWA.">
+<meta name="author" content="Jón Tomas Magnússon Amorós">
+<link rel="canonical" href="https://spiky-situation.vercel.app/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="A spiky situation">
+<meta property="og:title" content="A spiky situation — how warming could speed up urchin grazing on Arctic kelp forests">
+<meta property="og:description" content="A scroll story about Arctic kelp forests and the sea urchins that graze them. By 2090, warming could double urchin grazing rates. Research by Jón Tomas Magnússon Amorós, UWA.">
+<meta property="og:url" content="https://spiky-situation.vercel.app/">
+<meta property="og:image" content="https://spiky-situation.vercel.app/share-3.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A green sea urchin seen from above, ringed by contour lines, beside the title A spiky situation.">
+<meta property="og:locale" content="en_AU">
+<meta property="og:locale:alternate" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="A spiky situation — how warming could speed up urchin grazing on Arctic kelp forests">
+<meta name="twitter:description" content="A scroll story about Arctic kelp forests and the sea urchins that graze them. By 2090, warming could double urchin grazing rates. Research by Jón Tomas Magnússon Amorós, UWA.">
+<meta name="twitter:image" content="https://spiky-situation.vercel.app/share-3.jpg">
+<title>A spiky situation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Host+Grotesk:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #EFEDE6; --ink: #2C1600; --muted: #5E6B70; --accent: #D8401F; --stain: #DCD2BC;
+    --serif: "Instrument Serif", "Times New Roman", serif;
+    --sans: "Host Grotesk", "Helvetica Neue", Arial, sans-serif;
+    --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+    --pad: 20px;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html { background: var(--paper); }
+  body { color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 1.5px solid var(--ink); outline-offset: 3px; }
+
+  #stain { position: fixed; z-index: 0; left: 50%; top: -30vh; width: 78vw; aspect-ratio: 619 / 2482; margin-left: -22vw; background: var(--stain); opacity: .6; pointer-events: none; will-change: transform; -webkit-mask: url(data:image/webp;base64,/*KELP*/) center / contain no-repeat; mask: url(data:image/webp;base64,/*KELP*/) center / contain no-repeat; transform: rotate(-20deg); }
+  #field { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; touch-action: pan-y; }
+  .veil { position: fixed; z-index: 2; left: 0; right: 0; bottom: 0; height: 53vh; pointer-events: none; background: linear-gradient(to top, rgba(239,237,230,.82) 0, rgba(239,237,230,.72) 55%, rgba(239,237,230,0) 100%); }
+  #track { position: relative; z-index: 0; pointer-events: none; }
+
+  .bar { position: fixed; z-index: 5; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; padding: calc(14px + env(safe-area-inset-top)) var(--pad) 0; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); pointer-events: none; }
+  .bar b { font-weight: 500; color: var(--ink); }
+  .bar > div { line-height: 1.7; }
+  #lang { pointer-events: auto; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; background: var(--paper); border: 1px solid rgba(44,22,0,.3); border-radius: 999px; height: 34px; padding: 0 12px; margin-top: -7px; cursor: pointer; display: flex; gap: 5px; align-items: center; color: var(--muted); }
+  #lang { display: none !important; } /* switch hidden; Spanish still available with ?lang=es */
+  #lang i { font-style: normal; opacity: .5; } #lang .on { color: var(--ink); font-weight: 500; }
+
+  main { position: relative; z-index: 4; }
+  .panel { position: fixed; left: 0; right: 0; bottom: 0; padding: 0 var(--pad) calc(60px + env(safe-area-inset-bottom)); pointer-events: none; }
+  .panel.off { visibility: hidden; }
+  .panel > * { opacity: 0; will-change: transform, opacity; }
+  .panel:not([inert]) button, .panel:not([inert]) input, .panel:not([inert]) details { pointer-events: auto; }
+
+  .eyebrow { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .eyebrow i { font-style: normal; color: var(--accent); }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(60px, 19vw, 132px); line-height: .88; letter-spacing: -.025em; margin-bottom: 18px; }
+  h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(25px, 7.3vw, 33px); line-height: 1.06; letter-spacing: -.012em; text-wrap: balance; }
+  h2 em { font-style: italic; }
+  p { font-size: 16px; line-height: 1.42; margin-top: 12px; max-width: 26rem; text-wrap: pretty; }
+  p.lead { font-family: var(--serif); font-size: clamp(22px, 6.2vw, 30px); line-height: 1.12; letter-spacing: -.01em; margin-top: 0; max-width: none; }
+  p.q { font-family: var(--serif); font-style: italic; font-size: clamp(21px, 6vw, 28px); line-height: 1.1; color: var(--accent); }
+  .meta { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); line-height: 1.65; margin-top: 16px; max-width: none; }
+  .meta.tight { text-transform: none; letter-spacing: 0; font-size: 11px; }
+  .hint { display: inline-flex; gap: 8px; align-items: center; }
+  .hint::before { content: ""; width: 1px; height: 22px; background: var(--ink); animation: drop 1.8s cubic-bezier(.6,0,.2,1) infinite; transform-origin: top; }
+  @keyframes drop { 0% { transform: scaleY(0); } 55% { transform: scaleY(1); } 100% { transform: scaleY(1) translateY(22px); opacity: 0; } }
+
+  .hud { display: flex; align-items: flex-end; gap: 14px; margin-top: 14px; }
+  .hud .big { font-family: var(--serif); font-size: 46px; line-height: .86; letter-spacing: -.02em; font-variant-numeric: tabular-nums; min-width: 2.6ch; }
+  .hud .big.acc { color: var(--accent); }
+  .hud .lab { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); line-height: 1.5; padding-bottom: 2px; }
+  .hud .lab b { font-weight: 500; color: var(--ink); }
+
+  .btn, .chip { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; background: none; border: 1px solid rgba(44,22,0,.4); border-radius: 999px; padding: 0 16px; min-height: 42px; cursor: pointer; transition: background .25s, color .25s, border-color .25s; }
+  .btn:hover, .chip:hover { border-color: var(--ink); }
+  .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 14px; }
+
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; background: transparent; margin: 6px 0 0; cursor: grab; touch-action: none; }
+  input[type=range]::-webkit-slider-runnable-track { height: 1px; background: var(--ink); }
+  input[type=range]::-moz-range-track { height: 1px; background: var(--ink); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; margin-top: -14px; border-radius: 50%; background: var(--accent); border: 6px solid var(--paper); box-shadow: 0 0 0 1px var(--accent); }
+  input[type=range]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 6px solid var(--paper); box-shadow: 0 0 0 1px var(--accent); }
+  .scale { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; letter-spacing: .06em; color: var(--muted); margin-top: -6px; }
+
+  details { margin-top: 14px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+  summary { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); cursor: pointer; min-height: 32px; display: flex; align-items: center; gap: 8px; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "+"; color: var(--accent); }
+  details[open] summary::before { content: "–"; }
+  details p { font-size: 12px; margin-top: 6px; max-width: none; }
+
+  .nav { position: fixed; z-index: 6; left: var(--pad); right: var(--pad); bottom: calc(14px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 14px; }
+  .segs { flex: 1; display: flex; gap: 4px; }
+  .segs button { flex: 1; height: 28px; border: 0; background: none; padding: 0; cursor: pointer; position: relative; }
+  .segs button::before, .segs button::after { content: ""; position: absolute; left: 0; top: 13px; height: 2px; border-radius: 2px; }
+  .segs button::before { right: 0; background: rgba(44,22,0,.16); }
+  .segs button::after { width: calc(var(--f, 0) * 100%); background: var(--ink); }
+  #count { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; color: var(--muted); font-variant-numeric: tabular-nums; }
+  #count b { font-weight: 500; color: var(--ink); }
+  #next { width: 46px; height: 46px; flex: none; border-radius: 50%; border: 1px solid var(--ink); background: var(--paper); cursor: pointer; display: grid; place-items: center; transition: background .25s, color .25s; }
+  #next:hover { background: var(--ink); color: var(--paper); }
+  #next svg { width: 16px; height: 16px; transition: transform .4s cubic-bezier(.2,.7,.2,1); }
+  #next.up svg { transform: rotate(180deg); }
+
+  /* phone cover: only what it needs, sized to the height it gets */
+  @media (max-width: 899px) {
+    .eyebrow.cov { display: none; }
+    h1 { font-size: clamp(50px, min(19vw, 10.6vh), 132px); margin-bottom: 14px; }
+    .panel[data-ch="0"] .meta { margin-top: 12px; }
+  }
+  @media (max-width: 899px) and (max-height: 720px) { .xtra { display: none; } .panel[data-ch="0"] p:not(.meta) { font-size: 15px; } }
+  @media (max-width: 899px) and (max-height: 600px) { .panel[data-ch="0"] .hint { display: none; } }
+
+  /* phone: one centred column under the picture */
+  .panel { text-align: center; padding-bottom: calc(104px + env(safe-area-inset-bottom)); }
+  .panel p { margin-inline: auto; }
+  .hud { flex-direction: column-reverse; align-items: center; gap: 10px; margin-top: 18px; }
+  .hud .big { min-width: 0; font-size: 60px; }
+  .hud .lab { padding-bottom: 0; }
+  summary { justify-content: center; }
+  .nav { flex-direction: column; gap: 2px; }
+  .segs { flex: none; width: min(100%, 240px); order: 2; }
+  .segs button { height: 20px; } .segs button::before, .segs button::after { top: 9px; }
+  @media (max-height: 690px) and (max-width: 899px) {
+    h2 { font-size: 24px; } p { font-size: 15px; margin-top: 8px; } .hud .big { font-size: 46px; } .hud { margin-top: 10px; gap: 5px; } p.lead { font-size: 21px; } .meta.opt { display: none; } .eyebrow { margin-bottom: 8px; }
+  }
+  @media (min-width: 900px) {
+    :root { --pad: clamp(40px, 5vw, 76px); }
+    .veil { right: auto; top: 0; height: auto; width: 54vw; background: linear-gradient(to right, rgba(239,237,230,.8) 0, rgba(239,237,230,.68) 55%, rgba(239,237,230,0) 100%); }
+    #stain { width: 34vw; left: 62%; margin-left: 0; top: -55vh; }
+    .bar { padding-top: 28px; font-size: 11px; }
+    .panel { right: auto; bottom: auto; top: 50%; width: min(31rem, 38vw); padding: 0 0 0 var(--pad); box-sizing: content-box; transform: translateY(-50%); }
+    .eyebrow { font-size: 11px; margin-bottom: 20px; }
+    h1 { font-size: clamp(84px, 9vw, 140px); margin-bottom: 26px; }
+    h2 { font-size: clamp(36px, 3.7vw, 54px); line-height: 1.03; }
+    p { font-size: 17.5px; margin-top: 20px; } p.lead { font-size: clamp(30px, 2.9vw, 42px); } p.q { font-size: clamp(26px, 2.6vw, 36px); }
+    .panel { text-align: left; } .panel p { margin-inline: 0; } summary { justify-content: flex-start; }
+    .hud { flex-direction: row; align-items: flex-end; gap: 14px; margin-top: 26px; } .hud .big { font-size: 68px; min-width: 2.6ch; } .hud .lab { padding-bottom: 2px; } .row { margin-top: 22px; }
+    .nav { flex-direction: row; gap: 14px; } .segs { flex: 1; width: auto; order: 0; } .segs button { height: 28px; } .segs button::before, .segs button::after { top: 13px; }
+    .meta { margin-top: 26px; font-size: 11px; }
+    .nav { right: auto; bottom: 30px; width: min(31rem, 38vw); }
+  }
+  @media (prefers-reduced-motion: reduce) { .hint::before { animation: none; } }
+
+  /* conclusion: just the paragraph, in the middle of the screen */
+  .panel[data-ch="7"] { left: 50%; right: auto; top: 50%; bottom: auto; width: min(88vw, 46rem); padding: 0; box-sizing: border-box; text-align: center; transform: translate(-50%, -52%); }
+  .panel[data-ch="7"] p { margin-inline: auto; }
+  .panel[data-ch="7"] .eyebrow { margin-bottom: 16px; }
+  .panel[data-ch="7"] p.lead { font-size: clamp(25px, 7vw, 46px); line-height: 1.1; }
+
+  /* two texts that take turns in the same place */
+  .panel > .swap { display: grid; opacity: 1; }
+  .swap > * { grid-area: 1 / 1; align-self: end; margin-top: 0; opacity: 0; will-change: transform, opacity; }
+  .swap p.q { font-size: clamp(25px, 7.3vw, 33px); line-height: 1.06; }
+  .pips.kp { color: var(--ink); }
+  .pips.kp svg { opacity: .14; }
+  .pips.kp svg.on { opacity: .9; }
+  @media (min-width: 900px) { .swap p.q { font-size: clamp(36px, 3.7vw, 54px); line-height: 1.03; } }
+
+  /* urchins up, forest down: two figures of equal weight */
+  .duo { display: flex; justify-content: center; align-items: flex-end; gap: 22px; margin-top: 18px; }
+  .duo > div { display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 104px; }
+  .duo > i { width: 1px; height: 54px; background: rgba(44,22,0,.25); }
+  .duo .lab { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .duo .big { font-family: var(--serif); font-size: 60px; line-height: .86; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .duo .big.acc { color: var(--accent); }
+  .pips { --d: 15px; display: grid; grid-template-columns: repeat(6, var(--d)); gap: 3px 4px; align-content: center; height: 52px; color: var(--accent); }
+  .pips svg { width: var(--d); height: var(--d); opacity: .18; transform: scale(.8); transition: opacity .3s, transform .3s cubic-bezier(.2,.7,.2,1); }
+  .pips svg.on { opacity: 1; transform: none; }
+  .meta.note { margin-top: 12px; opacity: .8; }
+  @media (max-height: 690px) and (max-width: 899px) { .duo { margin-top: 10px; } .duo > div { gap: 6px; } .duo .big { font-size: 46px; } .duo > i { height: 42px; } .pips { --d: 11.5px; height: 40px; gap: 2px 4px; } .meta.note { display: none; } }
+  @media (min-width: 900px) { .pips { --d: 17px; height: 58px; gap: 3px 5px; } .duo { justify-content: flex-start; gap: 30px; margin-top: 26px; } .duo > div { align-items: flex-start; min-width: 0; } .duo .big { font-size: 68px; } .duo .lab { font-size: 11px; } .duo > i { height: 64px; } }
+
+  /* the two photographs: what the drawings stand for */
+  .plate { position: fixed; z-index: 3; left: 0; top: 0; margin: 0; width: min(86vw, 350px); pointer-events: none; opacity: 0; will-change: transform, opacity; }
+  .plate img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+  .plate figcaption { display: flex; justify-content: space-between; gap: 12px; margin-top: 9px; font-family: var(--mono); font-size: 10px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+  .plate figcaption span:first-child { color: var(--ink); }
+  .plate.cut { width: min(94vw, 400px); mix-blend-mode: multiply; }
+  .plate.cut img { aspect-ratio: auto; }
+  .plate .sp { font-family: var(--serif); font-style: italic; font-size: 15px; letter-spacing: 0; text-transform: none; }
+  @media (min-width: 900px) { .plate.cut { width: min(46vw, 680px); } .plate .sp { font-size: 18px; } .plate { width: min(42vw, 600px); } .plate figcaption { font-size: 11px; } }
+
+  /* closing: the author signs the piece */
+  #closing { position: fixed; z-index: 3; left: 0; top: 0; width: 0; height: 0; pointer-events: none; opacity: 0; will-change: transform, opacity; }
+  #closing .in { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); width: min(86vw, 340px); text-align: center; }
+  #closing img { display: block; width: 136px; height: 136px; margin: 0 auto 22px; border-radius: 50%; object-fit: cover; mix-blend-mode: multiply; filter: saturate(.8) contrast(1.02); outline: 1px solid rgba(44,22,0,.45); outline-offset: 8px; }
+  #closing .nm2 { font-family: var(--serif); font-size: 32px; line-height: 1; letter-spacing: -.012em; }
+  #closing .af { font-family: var(--mono); font-size: 10px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); line-height: 1.75; margin-top: 12px; }
+  .links { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 10px; }
+  @media (min-width: 900px) { .links { justify-content: flex-start; } }
+  .btn.pdf { display: inline-flex; align-items: center; margin-top: 16px; text-decoration: none; color: var(--ink); }
+  .btn.pdf[aria-disabled="true"] { opacity: .5; cursor: default; border-style: dashed; }
+  .panel:not([inert]) a.btn:not([aria-disabled="true"]) { pointer-events: auto; }
+  @media (min-width: 900px) { #closing img { width: 180px; height: 180px; } #closing .nm2 { font-size: 44px; } #closing .af { font-size: 11px; } }
+
+  /* chapter label: a caption, not a tag */
+  .eyebrow { font-family: var(--serif); font-style: italic; font-size: 19px; letter-spacing: 0; text-transform: none; color: var(--muted); margin-bottom: 8px; }
+  /* progress: a map scale bar with the urchin walking along it */
+  .nav { display: flex; flex-direction: row; justify-content: center; gap: 0; bottom: calc(30px + env(safe-area-inset-bottom)); }
+  .ruler { position: relative; width: min(100%, 292px); height: 38px; }
+  .ruler::before { content: ""; position: absolute; left: 0; right: 0; top: 14px; height: 1px; background: rgba(44,22,0,.4); }
+  .ruler .tk { position: absolute; top: 14px; width: 1px; height: 5px; background: rgba(44,22,0,.4); }
+  .ruler .tk.maj { height: 10px; background: var(--ink); }
+  .ruler .nm { position: absolute; top: 27px; transform: translateX(-50%); font-family: var(--mono); font-size: 9px; line-height: 1; color: var(--muted); opacity: .55; transition: opacity .3s, color .3s; }
+  .ruler .nm.on { color: var(--ink); opacity: 1; font-weight: 500; }
+  .ruler .mk { position: absolute; top: 6px; width: 16px; height: 16px; margin-left: -8px; color: var(--accent); will-change: left; }
+  .ruler .mk svg { display: block; width: 100%; height: 100%; }
+  .segs { position: absolute; inset: 0; display: flex; gap: 0; width: auto; flex: none; order: 0; }
+  .segs button { flex: 1; height: 100%; }
+  .segs button::before, .segs button::after { display: none; }
+  @media (min-width: 900px) { .nav { justify-content: flex-start; bottom: 34px; } .eyebrow { font-size: 22px; margin-bottom: 16px; } }
+</style>
+</head>
+<body>
+
+<div id="stain" aria-hidden="true"></div>
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="veil" aria-hidden="true"></div>
+
+<header class="bar"><div><b data-es="Una situación espinosa">A spiky situation</b><br><span id="loc">Svalbard, 78° N</span></div><button id="lang" type="button" aria-label="Switch language / Cambiar idioma"><span class="on">EN</span><i>/</i><span>ES</span></button></header>
+
+<main>
+  <article class="panel" data-ch="0" aria-labelledby="t0">
+    <div class="eyebrow cov" data-es='Kelp ártico × erizos de mar'>Arctic kelp × sea urchins</div>
+    <h1 id="t0" data-es='Una situación espinosa'>A spiky situation</h1>
+    <p data-es='Cómo el calentamiento podría acelerar el consumo de kelp por los erizos en los bosques del Ártico.'>How warming could speed up urchin grazing on Arctic kelp forests.</p>
+    <p class="meta" data-es='Jón Tomas Magnússon Amorós<span class="xtra"><br>Laboratorio Wernberg &amp; Filbee-Dexter, UWA</span>'>Jón Tomas Magnússon Amorós<span class="xtra"><br>Wernberg &amp; Filbee-Dexter lab, UWA</span></p>
+    <p class="meta hint" data-es='Desliza para sumergirte'>Scroll to dive in</p>
+  </article>
+
+  <article class="panel" data-ch="1" aria-labelledby="t1">
+    <div class="eyebrow" data-es='Bosques de kelp'>Kelp forests</div>
+    <h2 id="t1" data-es='Los bosques de kelp dan refugio a los peces, sostienen la pesca y <em>almacenan carbono</em>.'>Kelp forests shelter fish, support fisheries and <em>store carbon</em>.</h2>
+  </article>
+
+  <article class="panel" data-ch="2" aria-labelledby="t2">
+    <div class="eyebrow" data-es='Erizos de mar'>Sea urchins</div>
+    <h2 id="t2" data-es='El sobrepastoreo de los erizos puede convertirlos en <em>blanquizales</em> persistentes.'>Overgrazing by sea urchins can turn them into persistent <em>urchin barrens</em>.</h2>
+    <div class="duo"><div><span class="lab" data-es='Presión de pastoreo'>Grazing pressure</span><span class="pips" id="pips" role="img" aria-label="Low"><svg viewBox="0 0 16 16" fill="currentColor" stroke="currentColor" stroke-width=".9" stroke-linecap="round"><path d="M8 .6v4M8 11.4v4M.6 8h4M11.4 8h4M2.8 2.8l2.8 2.8M10.4 10.4l2.8 2.8M13.2 2.8l-2.8 2.8M5.6 10.4l-2.8 2.8M5.2 1.4l1.2 3.6M9.6 11l1.2 3.6M10.8 1.4L9.6 5M6.4 11l-1.2 3.6M1.4 5.2L5 6.4M11 9.6l3.6 1.2M1.4 10.8L5 9.6M11 6.4l3.6-1.2" fill="none"/><circle cx="8" cy="8" r="2.7" stroke="none"/></svg><svg viewBox="0 0 16 16" fill="currentColor" stroke="currentColor" stroke-width=".9" stroke-linecap="round"><path d="M8 .6v4M8 11.4v4M.6 8h4M11.4 8h4M2.8 2.8l2.8 2.8M10.4 10.4l2.8 2.8M13.2 2.8l-2.8 2.8M5.6 10.4l-2.8 2.8M5.2 1.4l1.2 3.6M9.6 11l1.2 3.6M10.8 1.4L9.6 5M6.4 11l-1.2 3.6M1.4 5.2L5 6.4M11 9.6l3.6 1.2M1.4 10.8L5 9.6M11 6.4l3.6-1.2" fill="none"/><circle cx="8" cy="8" r="2.7" stroke="none"/></svg><svg viewBox="0 0 16 16" fill="currentColor" stroke="currentColor" stroke-width=".9" stroke-linecap="round"><path d="M8 .6v4M8 11.4v4M.6 8h4M11.4 8h4M2.8 2.8l2.8 2.8M10.4 10.4l2.8 2.8M13.2 2.8l-2.8 2.8M5.6 10.4l-2.8 2.8M5.2 1.4l1.2 3.6M9.6 11l1.2 3.6M10.8 1.4L9.6 5M6.4 11l-1.2 3.6M1.4 5.2L5 6.4M11 9.6l3.6 1.2M1.4 10.8L5 9.6M11 6.4l3.6-1.2" fill="none"/><circle cx="8" cy="8" r="2.7" stroke="none"/></svg><svg viewBox="0 0 16 16" fill="currentColor" stroke="currentColor" stroke-width=".9" stroke-linecap="round"><path d="M8 .6v4M8 11.4v4M.6 8h4M11.4 8h4M2.8 2.8l2.8 2.8M10.4 10.4l2.8 2.8M13.2 2.8l-2.8 2.8M5.6 10.4l-2.8 2.8M5.2 1.4l1.2 3.6M9.6 11l1.2 3.6M10.8 1.4L9.6 5M6.4 11l-1.2 3.6M1.4 5.2L5 6.4M11 9.6l3.6 1.2M1.4 10.8L5 9.6M11 6.4l3.6-1.2" fill="none"/><circle cx="8" cy="8" r="2.7" stroke="none"/></svg><svg viewBox="0 0 16 16" fill="currentColor" stroke="currentColor" stroke-width=".9" stroke-linecap="round"><path d="M8 .6v4M8 11.4v4M.6 8h4M11.4 8h4M2.8 2.8l2.8 2.8M10.4 10.4l2.8 2.8M13.2 2.8l-2.8 2.8M5.6 10.4l-2.8 2.8M5.2 1.4l1.2 3.6M9.6 11l1.2 3.6M10.8 1.4L9.6 5M6.4 11l-1.2 3.6M1.4 5.2L5 6.4M11 9.6l3.6 1.2M1.4 10.8L5 9.6M11 6.4l3.6-1.2" fill="none"/><circle cx="8" cy="8" r="2.7" stroke="none"/></svg></span></div><i aria-hidden="true"></i><div><span class="lab" data-es='Bosque de kelp'>Kelp forest</span><span class="pips kp" id="kpips" role="img" aria-label="Intact"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.2c3.1 2.7 3.1 10 0 13.6C4.9 11.2 4.9 3.9 8 1.2z"/></svg></span></div></div>
+    <p class="meta note" data-es='Esquema ilustrativo, no son datos del estudio'>Illustrative sketch, not study data</p>
+  </article>
+
+  <article class="panel" data-ch="3" aria-labelledby="t3">
+    <div class="eyebrow" data-es='Calentamiento'>Warming</div>
+    <div class="swap">
+      <h2 id="t3" data-out=".5" data-es='El Ártico se calienta casi <em>cuatro veces más rápido</em> que la media mundial.'>The Arctic is warming nearly <em>four times faster</em> than the global average.</h2>
+      <p class="q" data-at=".58" data-es='¿Hará el calentamiento que los erizos coman más kelp?'>Will warming make urchins eat more kelp?</p>
+    </div>
+  </article>
+
+  <article class="panel" data-ch="4" aria-labelledby="t4">
+    <div class="eyebrow" data-es='Un caso de estudio en el Ártico'>An Arctic case study</div>
+    <h2 id="t4" data-es='Dimos kelp de azúcar a erizos verdes de Svalbard, en tanques de <em>0,5 a 14,5 °C</em>.'>We fed sugar kelp to green sea urchins from Svalbard, in tanks from <em>0.5 to 14.5 °C</em>.</h2>
+    <div class="hud"><span class="big" id="tval">0.5°</span><span class="lab" data-es='Temperatura del agua<br><b id="rval">0,8 mg</b> de kelp por g de erizo y hora'>Water temperature<br><b id="rval">0.8 mg</b> kelp eaten per g urchin per hour</span></div>
+    <p class="meta opt" data-es='Sigue deslizando para calentar el agua'>Keep scrolling to warm the water</p>
+  </article>
+
+  <article class="panel" data-ch="5" aria-labelledby="t5">
+    <div class="eyebrow" data-es='Ritmo de consumo'>Feeding rate</div>
+    <h2 id="t5" data-es='Temperatura de <em>máximo consumo</em>.'><em>Peak feeding</em> temperature.</h2>
+    <p data-es='Ritmo de consumo de cada tanque (puntos pequeños, n = 76) y curva ajustada con IC del 95 %.'>Feeding rate of individual tanks (small points, n = 76) and fitted curve with 95% CI.</p>
+    <p class="meta" data-at=".7" data-es='Punto abierto: consumo previsto en la referencia (2000–2019)'>Open point — predicted feeding at baseline (2000–2019)</p>
+  </article>
+
+  <article class="panel" data-ch="6" aria-labelledby="t6">
+    <div class="eyebrow" data-es='En 2090'>By 2090</div>
+    <div class="swap">
+      <p class="lead" data-out=".2" data-es='Con esos ritmos de consumo, estimamos el pastoreo en 2090 bajo tres escenarios climáticos.'>We used their feeding rates to predict grazing in 2090 under three climate scenarios.</p>
+      <div data-at=".26">
+        <h2 id="t6" data-es='En 2090 los erizos podrían <em>duplicar su ritmo de consumo</em>.'>By 2090 urchins could <em>double their grazing rates</em>.</h2>
+        <div class="hud"><span class="big acc" id="pct">+0%</span><span class="lab" data-es='<b id="scen">Referencia, 2000–2019</b><br>consumo previsto, respecto a la referencia'><b id="scen">Baseline, 2000–2019</b><br>predicted feeding, relative to baseline</span></div>
+      </div>
+    </div>
+  </article>
+
+  <article class="panel" data-ch="7" aria-labelledby="t7">
+    <div class="eyebrow" data-es='Conclusiones'>Conclusions</div>
+    <p class="lead" id="t7" data-es='Si el calentamiento continúa, podría acercar a los erizos del Ártico a su temperatura de máximo consumo, aumentar la presión sobre los bosques de kelp y llegar a convertirlos en <em>blanquizales</em>.'>Continued warming could push Arctic urchins towards their peak feeding temperature, increasing grazing pressure on kelp forests and potentially leading to <em>urchin barrens</em>.</p>
+  </article>
+
+  <article class="panel" data-ch="8" aria-labelledby="t8">
+    <div class="eyebrow" data-es='Y después'>What next</div>
+    <h2 id="t8" data-es='¿Ocurre lo mismo en los bosques de kelp de <em>Australia Occidental</em>?'>Does the same hold for <em>Western Australia’s</em> kelp forests?</h2>
+    <p class="meta tight">Magnússon JT, Pedersen S, Earp HS, Pessarrodona A, Filbee-Dexter K, Wernberg T (in prep.)</p>
+    <div class="links"><a class="btn pdf" id="scholar" href="https://scholar.google.com/citations?user=1TlWTfMAAAAJ&amp;hl=en&amp;oi=ao" target="_blank" rel="noopener">Google Scholar ↗</a><a class="btn pdf" id="linkedin" href="https://www.linkedin.com/in/jon-tomas-magnusson/" target="_blank" rel="noopener">LinkedIn ↗</a></div>
+    <details>
+      <summary data-es='Referencias y apoyos'>References and support</summary>
+      <p>[1] Filbee-Dexter K, Scheibling RE (2014) Mar Ecol Prog Ser 495:1–25<br>[2] Rantanen M et al. (2022) Commun Earth Environ 3:168<br>[3] Assis J et al. (2024) Glob Ecol Biogeogr 33:e13813</p>
+      <p data-es='Con el apoyo de The Jock Clough Marine Foundation, The University of Western Australia, Oceans Institute, The Research Council of Norway, Ecological Society of Australia y el Marine &amp; Freshwater Research Institute.'>Supported by The Jock Clough Marine Foundation, The University of Western Australia, Oceans Institute, The Research Council of Norway, Ecological Society of Australia and the Marine &amp; Freshwater Research Institute.</p>
+    </details>
+  </article>
+</main>
+
+<figure class="plate" id="plate1"><img src="data:image/webp;base64,/*P1*/" alt="A kelp forest seen under water" width="1600" height="1066"><figcaption><span data-es='Bosque de kelp'>Kelp forest</span><span>© Alexis Savard Drouin</span></figcaption></figure>
+<figure class="plate" id="plate2"><img src="data:image/webp;base64,/*P2*/" alt="A rocky seabed stripped of kelp and covered in sea urchins" width="900" height="600"><figcaption><span data-es='Blanquizal'>Urchin barren</span><span>© Thomas Wernberg</span></figcaption></figure>
+<figure class="plate cut" id="plate3"><img src="data:image/webp;base64,/*P3*/" alt="A sugar kelp blade with its holdfast" width="1000" height="292"><figcaption><span data-es='Kelp de azúcar'>Sugar kelp</span><span class="sp">Saccharina latissima</span></figcaption></figure>
+
+<aside id="closing" aria-label="Author"><div class="in">
+  <img src="data:image/webp;base64,/*JON*/" alt="Portrait of Jón Tomas Magnússon Amorós" width="380" height="380">
+  <div class="nm2">Jón Tomas<br>Magnússon Amorós</div>
+  <div class="af">Wernberg &amp; Filbee-Dexter lab<br>UWA School of Biological Sciences<br>Oceans Institute</div>
+</div></aside>
+
+<div id="track" aria-hidden="true"></div>
+
+<nav class="nav" aria-label="Chapters">
+  <div class="ruler" id="ruler"><span class="mk" id="mk"><svg viewBox="0 0 16 16" fill="currentColor" stroke="currentColor" stroke-width=".9" stroke-linecap="round"><path d="M8 .6v4M8 11.4v4M.6 8h4M11.4 8h4M2.8 2.8l2.8 2.8M10.4 10.4l2.8 2.8M13.2 2.8l-2.8 2.8M5.6 10.4l-2.8 2.8M5.2 1.4l1.2 3.6M9.6 11l1.2 3.6M10.8 1.4L9.6 5M6.4 11l-1.2 3.6M1.4 5.2L5 6.4M11 9.6l3.6 1.2M1.4 10.8L5 9.6M11 6.4l3.6-1.2" fill="none"/><circle cx="8" cy="8" r="2.7" stroke="none"/></svg></span><div class="segs" id="segs"></div></div>
+</nav>
+
+<script>
+(() => {
+  const D = /*DATA*/null;
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let ES = /[?&]lang=es/.test(location.search);
+  const L = (en, es) => ES ? es : en;
+  const $ = id => document.getElementById(id);
+  const cvs = $('field'), ctx = cvs.getContext('2d');
+  const INK = '44,22,0', ACC = '216,64,31', PAPER = '#EFEDE6';
+  const lerp = (a, b, t) => a + (b - a) * t, clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v)), ss = t => t * t * (3 - 2 * t);
+  function kf(g, pts, lin) {
+    if (g <= pts[0][0]) return pts[0][1];
+    for (let i = 1; i < pts.length; i++) if (g <= pts[i][0]) { const t = (g - pts[i - 1][0]) / (pts[i][0] - pts[i - 1][0]); return lerp(pts[i - 1][1], pts[i][1], lin ? t : ss(t)); }
+    return pts[pts.length - 1][1];
+  }
+  function fT(T) {
+    const c = D.curve; if (T <= c[0][0]) return c[0][1];
+    for (let i = 1; i < c.length; i++) if (T <= c[i][0]) return lerp(c[i - 1][1], c[i][1], (T - c[i - 1][0]) / (c[i][0] - c[i - 1][0]));
+    return c[c.length - 1][1];
+  }
+  const BASE_T = D.scen[0][0], BASE_V = D.scen[0][1];
+  // the specimen photo sits on white: turn white into transparency once, then draw the cut-out
+  const IMG = new Image(); let SPR = null;
+  IMG.onload = () => {
+    const c = document.createElement('canvas'); c.width = IMG.naturalWidth; c.height = IMG.naturalHeight;
+    const x = c.getContext('2d'); x.drawImage(IMG, 0, 0); const d = x.getImageData(0, 0, c.width, c.height), px = d.data;
+    if (px[3] < 8) { SPR = c; return; }
+    for (let i = 0; i < px.length; i += 4) {
+      const a = 1 - Math.min(px[i], px[i + 1], px[i + 2]) / 255; if (a < .03) { px[i + 3] = 0; continue; }
+      const w = 255 * (1 - a); px[i] = (px[i] - w) / a; px[i + 1] = (px[i + 1] - w) / a; px[i + 2] = (px[i + 2] - w) / a; px[i + 3] = Math.min(255, a * 290);
+    }
+    x.putImageData(d, 0, 0); SPR = c;
+  };
+  IMG.src = 'data:image/webp;base64,/*IMG*/';
+
+  // ---------- chapters & scroll ----------
+  const CH = 9, LEN = [.9, 1.7, 2.2, 2.3, 2.7, 1.7, 2.6, 1.7, 2.0], SETTLE = [0, .88, .96, .82, .56, .82, .93, .82, .42];
+  const A_IN = [-1, .05, .05, .05, .05, .05, .05, .05, .05], B_OUT = [.55, .93, .95, .93, .94, .93, .95, .93, 9];
+  const track = $('track'), segs = $('segs');
+  const panels = [...document.querySelectorAll('.panel')];
+  for (let i = 0; i < CH; i++) {
+    track.appendChild(document.createElement('div'));
+    const b = document.createElement('button'); b.type = 'button';
+    b.setAttribute('aria-label', i === 0 ? 'Cover' : i === 8 ? 'Next question and credits' : 'Chapter ' + i);
+    b.addEventListener('click', () => goTo(i + SETTLE[i])); segs.appendChild(b);
+  }
+  const ruler = $('ruler'), mk = $('mk'), nums = [];
+  for (let i = 0; i <= CH * 4; i++) { const tk = document.createElement('span'); tk.className = 'tk' + (i % 4 === 0 ? ' maj' : ''); tk.style.left = (i / (CH * 4) * 100) + '%'; ruler.insertBefore(tk, segs); }
+  for (let i = 0; i < CH; i++) { const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = i >= 1 && i <= 7 ? i : ''; nm.style.left = ((i + .5) / CH * 100) + '%'; ruler.insertBefore(nm, segs); nums.push(nm); }
+  let W, H, Hs, lastW = 0, dpr, cell, cols, rows, vals, sub, G, tops = [];
+  function layout() {
+    W = window.innerWidth; H = window.innerHeight; dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
+    cvs.width = Math.round(W * dpr); cvs.height = Math.round(H * dpr);
+    if (W !== lastW) { // only re-space on width changes, so the mobile URL bar doesn't jolt the scroll
+      lastW = W; Hs = H; let y = 0; tops = [];
+      [...track.children].forEach((d, i) => { d.style.height = Math.round(LEN[i] * Hs) + 'px'; tops.push(y); y += Math.round(LEN[i] * Hs); });
+      tops.push(y);
+    }
+    const mob = W < 900;
+    cell = mob ? 5 : 8;
+    const cTop = panels[0].getBoundingClientRect().top, avail = Math.max(120, cTop - 58); cols = Math.ceil(W / cell); rows = Math.ceil(H / cell); vals = new Float32Array((cols + 1) * (rows + 1)); sub = new Float32Array((cols + 1) * (rows + 1));
+    G = mob
+      ? { mob, cx: W / 2, cy: .295 * H, U: Math.min(W * .94, H * .48), tcy: .238 * H, ts: .5, hx: [-.37, .17],
+          full: { x0: 34, x1: W - 22, y0: 96, y1: .465 * H }, strip: { x0: 34, x1: W - 22, y0: .385 * H, y1: .465 * H } }
+      : { mob, cx: .7 * W, cy: .5 * H, U: Math.min(.5 * W, .8 * H), tcy: .36 * H, ts: .58, hx: [-.4, .17],
+          full: { x0: .49 * W, x1: W - 96, y0: .2 * H, y1: .76 * H }, strip: { x0: .49 * W, x1: W - 96, y0: .66 * H, y1: .78 * H } };
+    G.hy = mob ? 58 + avail / 2 : G.cy; G.hsz = mob ? clamp((avail - 44) / 1.3, 84, G.U * .62) : G.U * .7;
+  }
+  // the last chapter can only scroll until the page ends, so its progress runs over that shorter distance
+  const span = i => i === CH - 1 ? Math.max(1, tops[i + 1] - tops[i] - H) : tops[i + 1] - tops[i];
+  const gFromY = y => { for (let i = 0; i < CH; i++) if (y < tops[i + 1]) return Math.min(CH - .001, i + clamp((y - tops[i]) / span(i))); return CH - .001; };
+  const yFromG = g => { const i = clamp(Math.floor(g), 0, CH - 1); return tops[i] + (g - i) * span(i); };
+  const goTo = (g, instant) => window.scrollTo({ top: Math.min(yFromG(g), tops[CH] - H), behavior: instant || RM ? 'auto' : 'smooth' });
+  function step(dir) {
+    const g = gFromY(window.scrollY), i = Math.floor(g), p = g - i;
+    if (dir > 0) { if (i === CH - 1 && p >= SETTLE[i] - .03) return goTo(0); goTo(p < SETTLE[i] - .04 ? i + SETTLE[i] : Math.min(CH - 1, i + 1) + SETTLE[Math.min(CH - 1, i + 1)]); }
+    else goTo(p > SETTLE[i] + .04 ? i + SETTLE[i] : Math.max(0, i - 1) + SETTLE[Math.max(0, i - 1)]);
+  }
+  addEventListener('keydown', e => {
+    if (e.altKey || e.metaKey || e.ctrlKey || /INPUT|BUTTON|SUMMARY/.test(e.target.tagName)) return;
+    if (['ArrowDown', 'ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); step(1); }
+    if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); step(-1); }
+  });
+
+  // ---------- kelp: Saccharina blades seen from above, drawn as contour islands ----------
+  function spine(b, N = 18) { const pts = []; let x = b.x, y = b.y; for (let i = 0; i <= N; i++) { const s = i / N, a = b.ang + b.bend * s; pts.push([x, y, s, a]); x += Math.cos(a) * b.len / N; y += Math.sin(a) * b.len / N; } return pts; }
+  const halfW = (b, s, side) => b.wid * Math.pow(Math.sin(Math.PI * (.05 + .93 * s)), .6) * (1 + .19 * Math.sin(s * 21 + b.ph + side * 1.9) + .06 * Math.sin(s * 47 + b.ph * 2.3));
+  function bladeTex(blades, ext, n) {
+    const V = new Float32Array(n * n), S = new Float32Array(n * n).fill(1), lines = blades.map(b => spine(b));
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const x = -ext + 2 * ext * i / (n - 1), y = -ext + 2 * ext * j / (n - 1); let best = -1, bs = 1;
+      blades.forEach((b, bi) => {
+        const L = lines[bi], mid = L[9]; if (Math.hypot(x - mid[0], y - mid[1]) > b.len * .7 + b.wid * 1.4) return;
+        let dmin = 1e9, sAt = 0, side = 1;
+        for (let k = 0; k < L.length - 1; k++) {
+          const ax = L[k][0], ay = L[k][1], vx = L[k + 1][0] - ax, vy = L[k + 1][1] - ay;
+          const u = clamp(((x - ax) * vx + (y - ay) * vy) / (vx * vx + vy * vy)), dx = x - ax - u * vx, dy = y - ay - u * vy, d = dx * dx + dy * dy;
+          if (d < dmin) { dmin = d; sAt = lerp(L[k][2], L[k + 1][2], u); side = vx * dy - vy * dx > 0 ? 1 : -1; }
+        }
+        const w = halfW(b, sAt, side), d = Math.sqrt(dmin);
+        const v = Math.max(-1, b.a * (1 - (d / w) ** 2)); if (v > best) { best = v; bs = sAt; }
+      });
+      V[j * n + i] = best; S[j * n + i] = bs;
+    }
+    return { V, S, n, ext };
+  }
+  function tex(T, x, y, grow) {
+    const f = (x + T.ext) / (2 * T.ext) * (T.n - 1), h = (y + T.ext) / (2 * T.ext) * (T.n - 1);
+    if (f < 0 || h < 0 || f >= T.n - 1 || h >= T.n - 1) return -1;
+    const i = f | 0, j = h | 0, u = f - i, v = h - j, n = T.n, o = j * n + i;
+    const val = (T.V[o] * (1 - u) + T.V[o + 1] * u) * (1 - v) + (T.V[o + n] * (1 - u) + T.V[o + n + 1] * u) * v;
+    T.last = o; return val;
+  }
+  const gmask = (T, grow) => grow >= 1 ? 1 : clamp((grow * 1.2 - T.S[T.last]) / .2);
+  const FOREST = [
+    { x: -.04, y: .04, ang: -2.0, len: .4, wid: .082, bend: .55, ph: .3, a: .36 },
+    { x: -.05, y: .05, ang: 2.75, len: .36, wid: .075, bend: -.6, ph: 1.7, a: .33 },
+    { x: -.02, y: .07, ang: 1.45, len: .38, wid: .08, bend: .5, ph: 2.9, a: .36 },
+    { x: .05, y: 0, ang: -.8, len: .41, wid: .085, bend: -.5, ph: 4.1, a: .38 },
+    { x: .06, y: .03, ang: .4, len: .38, wid: .078, bend: .6, ph: 5.2, a: .34 },
+    { x: 0, y: -.01, ang: -1.35, len: .33, wid: .07, bend: -.35, ph: .9, a: .31 },
+  ];
+  const FT = bladeTex(FOREST, .56, 240);
+  const ST = bladeTex([{ x: -.02, y: .4, ang: -Math.PI / 2, len: .8, wid: .17, bend: .16, ph: 1.2, a: .44 }], .5, 150);
+  const onBlade = (bi, s, side) => { const b = FOREST[bi], L = spine(b), k = Math.min(17, Math.floor(s * 18)), pt = L[k], a = pt[3], w = halfW(b, s, side) * .7; return [pt[0] - Math.sin(a) * side * w, pt[1] + Math.cos(a) * side * w]; };
+  const SCRIPT = [[0, .88, 1], [3, .88, -1], [2, .86, 1], [4, .86, -1], [1, .85, 1], [5, .82, 1], [0, .55, -1], [3, .55, 1], [2, .52, -1], [4, .52, 1], [1, .5, -1], [5, .45, -1], [0, .22, 1], [3, .24, -1], [2, .2, 1], [4, .2, -1]].map(a => onBlade(a[0], a[1], a[2]));
+  const ANCH = [onBlade(0, .6, 0), onBlade(3, .6, 0), onBlade(4, .62, 0)];
+  const UK = 1 / (2 * .085 * .085);
+  let userU = [], t = 0;
+  const SAMPLES = []; let sampleSum = 0;
+  for (let j = 0; j < FT.n; j += 3) for (let i = 0; i < FT.n; i += 3) { const k = FT.V[j * FT.n + i]; if (k > 0) { SAMPLES.push([-FT.ext + 2 * FT.ext * i / (FT.n - 1), -FT.ext + 2 * FT.ext * j / (FT.n - 1), k]); sampleSum += k; } }
+  const grazed = (x, y, U) => { let g = 0; for (const u of U) { const dx = x - u.x, dy = y - u.y; g += u.g * 2 * Math.exp(-(dx * dx + dy * dy) * UK); if (g >= 1) return 1; } return g; };
+
+  let par = 0;
+  const seabed = (x, y) =>
+    .12 * Math.sin(2.1 * x + .7 * (y + par) + 1 + t * .03) + .09 * Math.sin(-1.3 * x + 2.9 * (y + par) + 2.2 - t * .02) +
+    .06 * Math.sin(4.3 * x + 3.7 * (y + par) + .3 + t * .015) + .16 * Math.sin(1.1 * (y + par) + .4);
+
+  function label(x, y, lines, o = {}) {
+    const a = o.alpha ?? 1; if (a < .02) return;
+    ctx.save(); ctx.globalAlpha = a; ctx.font = o.font || `500 ${G.mob ? 9.5 : 11}px "Geist Mono", ui-monospace, monospace`;
+    ctx.textAlign = o.align || 'left'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.lineWidth = 5; ctx.strokeStyle = PAPER; ctx.fillStyle = o.color || `rgb(${INK})`;
+    lines.forEach((ln, i) => { const yy = y + i * (o.lh || 14); if (o.halo !== false) ctx.strokeText(ln, x, yy); ctx.fillText(ln, x, yy); });
+    ctx.restore();
+  }
+  function leader(x0, y0, x1, y1, a, color) {
+    if (a < .02) return; ctx.save(); ctx.globalAlpha = a; ctx.strokeStyle = ctx.fillStyle = color || `rgb(${INK})`; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(x0, y0, 2.4, 0, 7); ctx.fill(); ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke(); ctx.restore();
+  }
+  function urchin(x, y, s, seed, alpha) {
+    if (alpha < .02 || s < .02) return; const R = clamp(G.U * .032, 8, 13) * s, r0 = R * .3, n = 26;
+    ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y); ctx.rotate(seed * 1.7 + (RM ? 0 : Math.sin(t * .7 + seed) * .14));
+    ctx.strokeStyle = ctx.fillStyle = `rgb(${ACC})`; ctx.lineWidth = .9; ctx.beginPath();
+    for (let a = 0; a < n; a++) { const an = a / n * Math.PI * 2, rr = R * (.6 + .4 * Math.abs(Math.sin(a * 2.4 + seed * 3))); ctx.moveTo(Math.cos(an) * r0 * .9, Math.sin(an) * r0 * .9); ctx.lineTo(Math.cos(an) * rr, Math.sin(an) * rr); }
+    ctx.stroke(); ctx.beginPath(); ctx.arc(0, 0, r0, 0, 7); ctx.fill(); ctx.restore();
+  }
+  function sprite(x, y, size, rot, alpha) {
+    if (alpha < .02 || !SPR) return; const w = size * SPR.width / SPR.height;
+    ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y); ctx.rotate(rot); ctx.drawImage(SPR, -w / 2, -size / 2, w, size); ctx.restore();
+  }
+
+  // ---------- chart ----------
+  function chart(g, q) {
+    if (q.CA < .01) return;
+    const R = {}; for (const k of ['x0', 'x1', 'y0', 'y1']) R[k] = lerp(G.strip[k], G.full[k], q.CG);
+    const X = T => R.x0 + T / 15 * (R.x1 - R.x0), Y = v => R.y1 - Math.min(v, 4.2) / 4.25 * (R.y1 - R.y0);
+    const ink = a => `rgba(${INK},${a})`, acc = a => `rgba(${ACC},${a})`;
+    ctx.save(); ctx.globalAlpha = q.CA; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    // peak band
+    if (q.BAND > .01) { ctx.fillStyle = acc(.1 * q.BAND); ctx.fillRect(X(D.band[0]), R.y0, X(D.band[1]) - X(D.band[0]), R.y1 - R.y0); }
+    // axes
+    ctx.strokeStyle = ink(.9); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(R.x0, R.y1); ctx.lineTo(R.x1, R.y1);
+    for (let T = 0; T <= 15; T += 3) { ctx.moveTo(X(T), R.y1); ctx.lineTo(X(T), R.y1 + 5); }
+    ctx.stroke();
+    for (let T = 0; T <= 15; T += 3) label(X(T), R.y1 + 15, [T === 15 ? '15 °C' : String(T)], { align: T === 15 ? 'right' : T === 0 ? 'left' : 'center', color: ink(.7), halo: false });
+    if (q.CG > .02) {
+      ctx.globalAlpha = q.CA * q.CG; ctx.beginPath(); ctx.moveTo(R.x0, R.y1); ctx.lineTo(R.x0, R.y0);
+      for (let v = 1; v <= 4; v++) { ctx.moveTo(R.x0 - 5, Y(v)); ctx.lineTo(R.x0, Y(v)); }
+      ctx.stroke();
+      for (let v = 1; v <= 4; v++) label(R.x0 - 9, Y(v), [String(v)], { align: 'right', color: ink(.7), alpha: q.CA * q.CG, halo: false });
+      label(R.x0, R.y0 - 14, [L('KELP EATEN — MG PER G URCHIN PER HOUR', 'KELP CONSUMIDO — MG POR G DE ERIZO Y HORA')], { color: ink(.7), alpha: q.CA * q.CG, halo: false });
+      ctx.globalAlpha = q.CA;
+    }
+    // the 76 tanks
+    const rDot = G.mob ? 1.7 : 2.4;
+    for (const [T, v] of D.tanks) {
+      const a = (g < 4.92 ? clamp((q.Tm - T) / .3) : 1) * lerp(.62, .3, q.REV); if (a < .02) continue;
+      ctx.fillStyle = ink(a); ctx.beginPath(); ctx.arc(X(T), Y(v), rDot, 0, 7); ctx.fill();
+    }
+    // fitted curve, drawn like a hill in section
+    if (q.REV > .005) {
+      const Tmax = .52 + 13.86 * q.REV, pts = D.curve.filter(p => p[0] <= Tmax); pts.push([Tmax, fT(Tmax)]);
+      ctx.fillStyle = ink(.07);
+      const hi = D.hi.filter(p => p[0] <= Tmax), lo = D.lo.filter(p => p[0] <= Tmax);
+      if (hi.length > 1) { ctx.beginPath(); hi.forEach((p, i) => i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))); for (let i = lo.length - 1; i >= 0; i--) ctx.lineTo(X(lo[i][0]), Y(lo[i][1])); ctx.closePath(); ctx.fill(); }
+      for (let s = 1; s <= 6; s++) {
+        ctx.strokeStyle = ink(s === 6 ? 1 : .16); ctx.lineWidth = s === 6 ? (G.mob ? 1.8 : 2.2) : 1; ctx.beginPath();
+        pts.forEach((p, i) => { const y = Y(p[1] * s / 6); i ? ctx.lineTo(X(p[0]), y) : ctx.moveTo(X(p[0]), y); }); ctx.stroke();
+      }
+    }
+    if (q.BAND > .01) label((X(D.band[0]) + X(D.band[1])) / 2, R.y0 + 12, [L('PEAK FEEDING', 'TEMPERATURA DE'), L('TEMPERATURE', 'MÁXIMO CONSUMO')], { align: 'center', color: acc(1), alpha: q.CA * q.BAND, lh: 12 });
+    // today
+    if (q.BASE > .01) {
+      const bx = X(BASE_T), by = Y(BASE_V);
+      ctx.globalAlpha = q.CA * q.BASE; ctx.strokeStyle = ink(.5); ctx.lineWidth = 1; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx, R.y1); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = PAPER; ctx.strokeStyle = ink(1); ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(bx, by, 4.5, 0, 7); ctx.fill(); ctx.stroke();
+      label(bx + 10, by + 15, [L('BASELINE 2000–2019', 'REFERENCIA 2000–2019')], { alpha: q.CA * q.BASE });
+      ctx.globalAlpha = q.CA;
+    }
+    // tank cursor (chapter 4)
+    if (q.P > .02 && q.CG < .98) {
+      const x = X(q.Tm), y = Y(fT(q.Tm)); ctx.globalAlpha = q.CA * q.P * (1 - q.CG);
+      ctx.strokeStyle = acc(1); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, R.y0 - 6); ctx.lineTo(x, R.y1); ctx.stroke();
+      ctx.fillStyle = acc(1); ctx.beginPath(); ctx.arc(x, y, 4, 0, 7); ctx.fill(); ctx.globalAlpha = q.CA;
+    }
+    // 2090 (chapter 6)
+    if (q.MKA > .01) {
+      const mx = X(q.MK), my = Y(fT(q.MK)), by = Y(BASE_V), bx = X(BASE_T);
+      ctx.globalAlpha = q.CA * q.MKA;
+      ctx.strokeStyle = ink(.5); ctx.lineWidth = 1; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(mx, by); ctx.moveTo(mx, by); ctx.lineTo(mx, R.y1); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = acc(1); ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(mx, by); ctx.lineTo(mx, my); ctx.stroke();
+      D.scen.slice(1).forEach((s, i) => {
+        const a = clamp((q.MK - s[0] + .12) / .12); if (a < .02) return;
+        ctx.globalAlpha = q.CA * q.MKA * a; ctx.fillStyle = PAPER; ctx.strokeStyle = acc(1); ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(X(s[0]), Y(s[1]), 3.6, 0, 7); ctx.fill(); ctx.stroke();
+        label(X(s[0]) - 9, Y(s[1]) - 9, [['+42%', '+82%', '+132%'][i]], { align: 'right', color: acc(1), alpha: q.CA * q.MKA * a });
+      });
+      ctx.globalAlpha = q.CA * q.MKA; ctx.fillStyle = acc(.2); ctx.beginPath(); ctx.arc(mx, my, 11, 0, 7); ctx.fill();
+      ctx.fillStyle = acc(1); ctx.beginPath(); ctx.arc(mx, my, 5.5, 0, 7); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // ---------- frame ----------
+  let maxDpr = 3, fc = 0, ft = 0; // draw at the screen's own density; step down once if the phone can't keep up
+  let gs = 0, last = performance.now(), shown = {}, dragging = false;
+  const set = (id, v) => { if (shown[id] !== v) { shown[id] = v; $(id).textContent = v; } };
+  const kids = panels.map(p => [...p.querySelectorAll(':scope > *:not(.swap), :scope > .swap > *')]);
+  const swaps = panels.map(p => { const el = p.querySelector(':scope > .swap'); if (!el) return null; const ch = [...p.children]; return { el, pre: ch.slice(0, ch.indexOf(el)), h: 0, cur: 0 }; });
+  function measureSwaps() { swaps.forEach(sw => { if (!sw) return; sw.h = sw.el.offsetHeight; [...sw.el.children].forEach(c => c._h = c.offsetHeight); }); }
+  ['pips', 'kpips'].forEach(id => { const pp = $(id); while (pp.children.length < 18) pp.appendChild(pp.firstElementChild.cloneNode(true)); });
+  const stain = $('stain'), closing = $('closing'), plates = [$('plate1'), $('plate2'), $('plate3')];
+
+  function frame(now) {
+    const dt = Math.min(.05, (now - last) / 1000); last = now; if (!RM) t += dt;
+    if (maxDpr > 2 && ++fc > 20) { ft += dt; if (fc === 110) { if (ft / 90 > .027) { maxDpr = 2; layout(); } } }
+    const sy = window.scrollY, gt = gFromY(sy);
+    gs = RM || Math.abs(gt - gs) < .0004 ? gt : gs + (gt - gs) * (1 - Math.exp(-dt * 11));
+    const g = gs, ch = Math.min(CH - 1, Math.floor(g)), p = g - ch;
+    par = RM ? 0 : sy / Hs * .22;
+
+    const F = kf(g, [[.5, 0], [.68, 1], [2.66, 1], [2.78, 0]]); // the drawing leaves for good as the barren photograph comes in
+    const GROW = g < 4 ? kf(g, [[1.22, 0], [1.8, 1]]) : 1, P1 = kf(g, [[.8, 0], [.98, 1], [1.24, 1], [1.42, 0]]), P2 = kf(g, [[2.66, 0], [2.78, 1], [2.96, 1], [3.04, 0]]), P3 = kf(g, [[3.97, 0], [4.07, 1], [4.17, 1], [4.27, 0]]), COV = kf(g, [[.06, 1], [.56, 0]]), CL = kf(g, [[8.12, 0], [8.36, 1]]), C7 = 0, /* conclusion: just the paragraph, nothing drawn around it */ MND = Math.max(COV, CL * .85, C7);
+    const z = kf(g, [[0, .78], [1.5, 1], [2.05, 1], [2.9, 1.14], [3.1, 1], [7, 1], [8, 1.1], [8.4, .8]]);
+    const S = 1;
+    const TG = kf(g, [[3.05, 0], [3.42, 1], [3.9, 1], [4.04, 0]]);
+    const q = {
+      P: kf(g, [[4.2, 0], [4.32, 1], [4.9, 1], [5.08, 0]]),
+      Tm: kf(g, [[4.36, .5], [4.92, 14.5]], true),
+      CA: kf(g, [[4.26, 0], [4.36, 1], [6.95, 1], [7.06, 0]]),
+      CG: kf(g, [[4.92, 0], [5.22, 1]]),
+      REV: kf(g, [[5.12, 0], [5.6, 1]]),
+      BAND: kf(g, [[5.52, 0], [5.68, 1]]),
+      BASE: kf(g, [[5.64, 0], [5.78, 1]]),
+      MK: kf(g, [[6.3, BASE_T], [6.46, 3.86], [6.52, 3.86], [6.68, 4.98], [6.74, 4.98], [6.9, 7.1]]),
+      MKA: kf(g, [[6.2, 0], [6.3, 1]]),
+    };
+    const rate = fT(q.Tm);
+
+    // urchins: scripted by scroll, plus the ones the reader adds
+    if (g < 1.98 || g > 3.12) userU = [];
+    const U = [];
+    SCRIPT.forEach((s, i) => { const gg = g < 3.3 ? clamp((g - (2.1 + i * .028)) / .1) : 0; if (gg > .001) U.push({ x: s[0], y: s[1], g: ss(gg), seed: i }); });
+    userU.forEach((u, i) => U.push({ x: u.x, y: u.y, g: RM ? 1 : 1 - Math.exp(-(t - u.born) * 1.6), seed: 20 + i }));
+    let cover = 1; if (U.length) { let s = 0; for (const sp of SAMPLES) s += sp[2] * (1 - grazed(sp[0], sp[1], U)); cover = s / sampleSum; }
+
+    // scalar fields: the seabed, and the subject on top of it
+    const mY = C7 > .001 ? H / 2 : COV >= CL * .85 ? G.hy : G.cy, mX = C7 > .001 ? W / 2 : G.cx, mS = C7 > .001 ? 1.5 : 1;
+    const Uz = G.U * z, Ut = G.U * G.ts, rb = .05 + .13 * (rate - .4) / 2.2, kb = 1 / (2 * rb * rb), sw = RM ? 0 : .006;
+    const h0 = { x: G.hx[0], k: 1 / (2 * .068 * .068), a: .19 * TG }, h1 = { x: G.hx[1], k: 1 / (2 * .128 * .128), a: .75 * TG };
+    for (let j = 0, n = 0; j <= rows; j++) {
+      const sy2 = j * cell, py = (sy2 - G.cy) / Uz;
+      for (let i = 0; i <= cols; i++, n++) {
+        const sx = i * cell, px = (sx - G.cx) / Uz; let sv = 0;
+        vals[n] = S > .002 ? S * seabed(px, py) : 0;
+        if (F > .002) { let kk = tex(FT, px + sw * Math.sin(t * .5 + py * 5), py + sw * Math.sin(t * .4 + px * 4)); if (kk > 0) { const k = F * gmask(FT, GROW) * (U.length ? 1 - grazed(px, py, U) : 1); kk = kk * k - .05 * (1 - k); } sv += kk; }
+        if (MND > .002) {
+          const qx = (sx - mX) / (G.U * mS), qy = (sy2 - mY) / (G.U * mS);
+          vals[n] += MND * (.62 * Math.exp(-(qx * qx + qy * qy) / (2 * .25 * .25)) + .1 * Math.exp(-((qx - .2) ** 2 + (qy + .16) ** 2) / (2 * .1 * .1)) + .08 * Math.exp(-((qx + .24) ** 2 + (qy - .12) ** 2) / (2 * .09 * .09)));
+        }
+        if (q.P > .002) { const rx = (sx - G.cx) / Ut, ry = (sy2 - G.tcy) / Ut, kk0 = tex(ST, rx, ry); let kk = kk0; if (kk > 0) { const k = q.P * (1 - Math.min(1, 2 * Math.exp(-((rx - .2) ** 2 + ry * ry) * kb))); kk = kk * k - .05 * (1 - k); } sv += kk; }
+        sub[n] = sv;
+      }
+    }
+    // contours (marching squares), one pass per field
+    const STEP = .06, paths = [new Path2D(), new Path2D(), new Path2D(), new Path2D()], row = cols + 1;
+    function march(fld, l0, mod, pa, pb, masked) {
+      for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
+        const n = j * row + i, a = fld[n], b = fld[n + 1], c = fld[n + row + 1], d = fld[n + row];
+        const lo = Math.min(a, b, c, d), hi = Math.max(a, b, c, d); if (hi - lo < 1e-7) continue;
+        if (masked && (sub[n] > 1e-4 || sub[n + 1] > 1e-4 || sub[n + row + 1] > 1e-4 || sub[n + row] > 1e-4)) continue;
+        for (let li = Math.max(l0, Math.ceil(lo / STEP)), le = Math.floor(hi / STEP); li <= le; li++) {
+          const L = li * STEP + 1e-4, idx = (a > L ? 8 : 0) | (b > L ? 4 : 0) | (c > L ? 2 : 0) | (d > L ? 1 : 0); if (idx === 0 || idx === 15) continue;
+          const x0 = i * cell, y0 = j * cell, pth = li % mod === 0 ? pb : pa;
+          const T = () => [x0 + cell * (L - a) / (b - a), y0], R = () => [x0 + cell, y0 + cell * (L - b) / (c - b)], B = () => [x0 + cell * (L - d) / (c - d), y0 + cell], Lf = () => [x0, y0 + cell * (L - a) / (d - a)];
+          const seg = (p1, p2) => { pth.moveTo(p1[0], p1[1]); pth.lineTo(p2[0], p2[1]); };
+          switch (idx) {
+            case 1: case 14: seg(Lf(), B()); break; case 2: case 13: seg(B(), R()); break; case 3: case 12: seg(Lf(), R()); break;
+            case 4: case 11: seg(T(), R()); break; case 6: case 9: seg(T(), B()); break; case 7: case 8: seg(T(), Lf()); break;
+            case 5: seg(T(), Lf()); seg(B(), R()); break; case 10: seg(T(), R()); seg(Lf(), B()); break;
+          }
+        }
+      }
+    }
+    if (S > .002) march(vals, -99, 5, paths[0], paths[1], true);
+    march(sub, 0, 3, paths[2], paths[3], false);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    [[.075, 1], [.14, 1], [.55, 1], [.95, G.mob ? 1.3 : 1.5]].forEach((s, i) => { ctx.strokeStyle = `rgba(${INK},${s[0]})`; ctx.lineWidth = s[1]; ctx.stroke(paths[i]); });
+
+    // the specimen: the render opens the journey
+    if (COV > .02) {
+      const hs = G.hsz * lerp(.55, 1, COV), dial = hs * .64, rot = -g * .9;
+      ctx.save(); ctx.translate(G.cx, G.hy); ctx.rotate(rot); ctx.globalAlpha = COV * COV; ctx.lineCap = 'butt';
+      ctx.strokeStyle = `rgba(${INK},.55)`; ctx.lineWidth = 1; ctx.beginPath();
+      for (let i = 0; i < 180; i++) { if (i % 15 === 0) continue; const a = i / 180 * Math.PI * 2, r1 = dial + (i % 5 === 0 ? 7 : 4); ctx.moveTo(Math.cos(a) * dial, Math.sin(a) * dial); ctx.lineTo(Math.cos(a) * r1, Math.sin(a) * r1); }
+      ctx.stroke();
+      ctx.strokeStyle = `rgb(${INK})`; ctx.lineWidth = 1.4; ctx.beginPath();
+      for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2; ctx.moveTo(Math.cos(a) * (dial - 3), Math.sin(a) * (dial - 3)); ctx.lineTo(Math.cos(a) * (dial + 12), Math.sin(a) * (dial + 12)); }
+      ctx.stroke();
+      ctx.fillStyle = `rgb(${ACC})`; ctx.beginPath(); ctx.arc(0, -(dial + 20), 3, 0, 7); ctx.fill();
+      ctx.restore();
+      sprite(G.cx, G.hy, hs, g * 1.5 + (RM ? 0 : t * .025), COV);
+      if (!G.mob) label(G.cx, G.cy + G.U * .46, [L('GREEN SEA URCHIN', 'ERIZO DE MAR VERDE')], { align: 'center', alpha: COV * COV });
+      if (!G.mob) label(G.cx, G.cy + G.U * .46 + 17, ['Strongylocentrotus droebachiensis'], { align: 'center', alpha: COV * COV, font: `italic ${G.mob ? 14 : 17}px "Instrument Serif", serif`, color: `rgba(${INK},.8)` });
+    }
+
+    // near layer: registration marks that travel faster than the page
+    const sp = G.mob ? 104 : 150, off = RM ? 0 : (sy * 1.35) % sp;
+    ctx.strokeStyle = `rgba(${INK},.13)`; ctx.lineWidth = 1; ctx.beginPath();
+    for (let y = -off; y < H + sp; y += sp) for (let x = sp / 2; x < W; x += sp) { ctx.moveTo(x - 3, y); ctx.lineTo(x + 3, y); ctx.moveTo(x, y - 3); ctx.lineTo(x, y + 3); }
+    ctx.stroke();
+
+    // forest: urchins, tags
+    const fs = (x, y) => [G.cx + x * Uz, G.cy + y * Uz];
+    U.forEach(u => { const s = fs(u.x, u.y); urchin(s[0], s[1], Math.min(1, u.g * 3), u.seed, F * (1 - P2)); });
+    FOREST.forEach(b => { if (F * GROW > .05) { const s = fs(b.x, b.y); ctx.fillStyle = `rgba(${INK},${(.9 * F * Math.min(1, GROW * 4)).toFixed(3)})`; ctx.beginPath(); ctx.arc(s[0], s[1], 2.2, 0, 7); ctx.fill(); } });
+    const spA = kf(g, [[2.12, 0], [2.2, 1], [2.38, 1], [2.46, 0]]) * (1 - P2);
+    if (spA > .02 && U.length) {
+      const s0 = fs(U[0].x, U[0].y), lx = G.cx - G.U * (G.mob ? .47 : .6), ly = G.cy - G.U * (G.mob ? .32 : .43);
+      leader(s0[0], s0[1], lx, ly, spA, `rgb(${ACC})`);
+      label(lx, ly - 26, [L('GREEN SEA URCHIN', 'ERIZO DE MAR VERDE')], { alpha: spA, color: `rgb(${ACC})` });
+      label(lx, ly - 11, ['Strongylocentrotus droebachiensis'], { alpha: spA, font: `italic ${G.mob ? 13.5 : 17}px "Instrument Serif", serif`, color: `rgba(${INK},.85)` });
+    }
+    const tagA = kf(g, [[1.74, 0], [1.84, 1], [1.93, 1], [1.99, 0]]);
+    if (tagA > .02) {
+      const e = G.U * (G.mob ? .47 : .6), tags = [[-1, -1, L('SHELTER FOR FISH', 'REFUGIO PARA PECES')], [1, -1, L('FISHERIES', 'PESCA')], [1, 1, L('CARBON STORE', 'ALMACÉN DE CARBONO')]];
+      tags.forEach(([dx, dy, txt], i) => {
+        const a = clamp(tagA * 3 - i * .7), b = fs(ANCH[i][0], ANCH[i][1]), lx = G.cx + dx * e, ly = G.cy + dy * G.U * (G.mob ? (dy < 0 ? .4 : .47) : .43);
+        leader(b[0], b[1], lx, ly, a); label(lx, ly + (dy < 0 ? -10 : 11), [txt], { align: dx < 0 ? 'left' : 'right', alpha: a });
+      });
+    }
+    const barren = F * (1 - P2) * clamp((.24 - cover) / .1);
+    if (barren > .02) { const b = fs(0, 0), lx = b[0] + G.U * .2, ly = b[1] - G.U * .36; leader(b[0], b[1], lx, ly, barren, `rgb(${ACC})`); label(lx, ly - 10, [L('URCHIN BARREN', 'BLANQUIZAL')], { align: 'center', alpha: barren, color: `rgb(${ACC})` }); }
+
+    // warming: one set of rings — the global average stops at ring 3, the Arctic runs on to ring 12
+    if (TG > .01) {
+      const dr = G.U * .037, shape = th => 1 + .028 * Math.sin(3 * th + 1) + .018 * Math.sin(5 * th + 2.3);
+      const ring = (k, color, w, a) => { if (a < .02) return; ctx.globalAlpha = a; ctx.strokeStyle = color; ctx.lineWidth = w; ctx.beginPath(); for (let i = 0; i <= 72; i++) { const th = i / 72 * Math.PI * 2, r = k * dr * shape(th); i ? ctx.lineTo(G.cx + Math.cos(th) * r, G.cy + Math.sin(th) * r) : ctx.moveTo(G.cx + Math.cos(th) * r, G.cy + Math.sin(th) * r); } ctx.closePath(); ctx.stroke(); };
+      const out = kf(g, [[3.9, 1], [4.04, 0]]), grow = kf(g, [[3.05, 0], [3.42, 1]], true);
+      ctx.save(); ctx.lineJoin = 'round';
+      for (let k = 12; k >= 1; k--) ring(k, `rgb(${ACC})`, k === 12 ? 1.6 : 1, out * clamp(grow * 12 - k + 1) * (k <= 3 ? .45 : 1));
+      for (let k = 1; k <= 3; k++) ring(k, `rgb(${INK})`, k === 3 ? 1.8 : 1.1, out * clamp(grow * 3 - k + 1));
+      ctx.restore();
+      const pt = (k, th) => [G.cx + Math.cos(th) * k * dr * shape(th), G.cy + Math.sin(th) * k * dr * shape(th)];
+      const e = G.U * (G.mob ? .47 : .56), ty = G.cy - G.U * (G.mob ? .33 : .46), aG = out * clamp(grow * 3 - 2.4), aA = out * clamp(grow * 12 - 11.4);
+      const pg = pt(3, -2.36), pa = pt(12, -.86);
+      leader(pg[0], pg[1], G.cx - e, ty, aG); label(G.cx - e, ty - 24, [L('GLOBAL AVERAGE', 'MEDIA MUNDIAL'), '1×'], { alpha: aG, lh: 13 });
+      leader(pa[0], pa[1], G.cx + e, ty, aA, `rgb(${ACC})`); label(G.cx + e, ty - 24, [L('ARCTIC', 'ÁRTICO'), L('NEARLY 4×', 'CASI 4×')], { align: 'right', alpha: aA, lh: 13, color: `rgb(${ACC})` });
+      label(G.cx, G.cy + G.U * .485, [L('EACH RING — THE SAME AMOUNT OF WARMING', 'CADA ANILLO — LA MISMA CANTIDAD DE CALENTAMIENTO')], { align: 'center', alpha: out * clamp(grow * 2) * .8, color: `rgba(${INK},.7)` });
+    }
+    // the tank
+    if (q.P > .02) {
+      ctx.save(); ctx.globalAlpha = q.P; ctx.strokeStyle = `rgba(${INK},.55)`; ctx.lineWidth = 1; ctx.setLineDash([1, 5]); ctx.beginPath(); ctx.arc(G.cx, G.tcy, Ut * .47, 0, 7); ctx.stroke(); ctx.restore();
+      urchin(G.cx + (.2 + rb * .25) * Ut, G.tcy, 1.9, 3, q.P);
+      label(G.cx, G.tcy - Ut * .47 - 13, ['Saccharina latissima  ×  Strongylocentrotus droebachiensis'], { align: 'center', alpha: q.P, font: `italic ${G.mob ? 12.5 : 16}px "Instrument Serif", serif`, color: `rgba(${INK},.8)` });
+    }
+    chart(g, q);
+
+    // ---------- DOM ----------
+    panels.forEach((pn, i) => {
+      const near = Math.abs(i - ch) <= 1; pn.classList.toggle('off', !near); if (!near) { if (!pn.inert) pn.inert = true; return; }
+      const pi = g - i; let vis = false;
+      const st = kids[i].map((el, k) => {
+        const a = el.dataset.at ? +el.dataset.at : A_IN[i], e = ss(clamp((pi - a - k * .02) / .09)), x = Math.max(ss(clamp((pi - B_OUT[i]) / .06)), el.dataset.out ? ss(clamp((pi - +el.dataset.out) / .06)) : 0);
+        return { el, k, e, x, op: e * (1 - x) };
+      });
+      const sw = swaps[i]; let off = 0;
+      if (sw) {
+        let ws = 0, hs = 0; st.forEach(o => { if (o.el.parentElement === sw.el) { ws += o.op; hs += o.op * (o.el._h || 0); } });
+        const target = sw.h - (ws > .001 ? hs / ws : sw.h - sw.cur); sw.cur += (target - sw.cur) * (RM ? 1 : 1 - Math.exp(-dt * 9)); off = sw.cur;
+      }
+      st.forEach(o => {
+        if (o.op > .5) vis = true; o.el.style.opacity = o.op.toFixed(3);
+        const extra = sw && sw.pre.includes(o.el) ? off : 0, ty = RM ? extra : (1 - o.e) * (24 + 12 * o.k) - o.x * (20 + 10 * o.k) + extra;
+        o.el.style.transform = `translate3d(0,${ty.toFixed(1)}px,0)`;
+      });
+      if (pn.inert === vis) pn.inert = !vis;
+    });
+    [P1, P2, P3].forEach((a, i) => { const el = plates[i]; el.style.opacity = a.toFixed(3); el.style.transform = `translate3d(${G.cx.toFixed(1)}px,${(G.cy + (RM ? 0 : (g - [1.1, 2.86, 4.12][i]) * -70)).toFixed(1)}px,0) translate(-50%,-50%) scale(${(RM ? 1 : 1.05 - .05 * a).toFixed(4)})`; });
+    closing.style.opacity = CL.toFixed(3); closing.style.transform = `translate3d(${G.cx.toFixed(1)}px,${(G.cy + (RM ? 0 : (1 - CL) * 22)).toFixed(1)}px,0)`;
+    if (!RM) stain.style.transform = `translate3d(0,${(-sy * .018).toFixed(1)}px,0) rotate(${(-20 + g * .35).toFixed(2)}deg)`;
+    stain.style.opacity = kf(g, [[.3, .6], [1, .24]]).toFixed(3);
+    mk.style.left = (g / CH * 100).toFixed(2) + '%';
+    if (shown.chn !== ch) { shown.chn = ch; nums.forEach((n, i) => n.classList.toggle('on', i === ch)); }
+    set('count', null); // placeholder to keep id in map
+    set('loc', g > 7.85 ? L('Western Australia, 32° S', 'Australia Occidental, 32° S') : 'Svalbard, 78° N');
+
+    const klvl = Math.round(cover * 18);
+    if (shown.klvl !== klvl) { shown.klvl = klvl; const kp = $('kpips'); [...kp.children].forEach((c, i) => c.classList.toggle('on', i < klvl)); kp.setAttribute('aria-label', klvl > 14 ? L('Intact', 'Intacto') : klvl > 6 ? L('Grazed', 'Mermado') : klvl > 0 ? L('Almost gone', 'Casi desaparecido') : L('Gone', 'Desaparecido')); }
+    const press = SCRIPT.reduce((a, s2, i) => a + (g < 3.3 ? clamp((g - (2.1 + i * .028)) / .1) : 0), 0) / SCRIPT.length, lvl = Math.min(18, Math.ceil(press * 18 - .001));
+    if (shown.lvl !== lvl) { shown.lvl = lvl; const pp = $('pips'); [...pp.children].forEach((c, i) => c.classList.toggle('on', i < lvl)); pp.setAttribute('aria-label', [L('None', 'Nula'), L('Low', 'Baja'), L('Moderate', 'Moderada'), L('High', 'Alta'), L('Very high', 'Muy alta'), L('Extreme', 'Extrema')][Math.ceil(lvl / 3.6)]); }
+    const dec = v => ES ? v.replace('.', ',') : v;
+    set('tval', dec(q.Tm.toFixed(1)) + '°'); set('rval', dec(rate.toFixed(1)) + ' mg');
+    const hit = D.scen.find(s => Math.abs(s[0] - q.MK) < .03);
+    set('pct', '+' + Math.round(((hit ? hit[1] : fT(q.MK)) / BASE_V - 1) * 100) + '%');
+    set('scen', q.MK < 2.6 ? L('Baseline, 2000–2019', 'Referencia, 2000–2019') : q.MK < 4.4 ? L('Low emissions, 2090', 'Emisiones bajas, 2090') : q.MK < 6 ? L('Intermediate emissions, 2090', 'Emisiones intermedias, 2090') : L('Very high emissions, 2090', 'Emisiones muy altas, 2090'));
+
+    requestAnimationFrame(frame);
+  }
+  shown.count = null;
+
+  const tr = [...document.querySelectorAll('[data-es]')]; tr.forEach(el => el.dataset.en = el.innerHTML);
+  function setLang(es) {
+    ES = es; tr.forEach(el => el.innerHTML = ES ? el.dataset.es : el.dataset.en);
+    document.documentElement.lang = ES ? 'es' : 'en'; document.title = L('A spiky situation', 'Una situación espinosa');
+    const sp = $('lang').querySelectorAll('span'); sp[0].classList.toggle('on', !ES); sp[1].classList.toggle('on', ES);
+    shown = {}; layout(); measureSwaps();
+  }
+  $('lang').addEventListener('click', () => setLang(!ES));
+  if (ES) setLang(true);
+
+  addEventListener('resize', () => { layout(); measureSwaps(); });
+  layout(); measureSwaps(); gs = gFromY(window.scrollY);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { layout(); measureSwaps(); });
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
